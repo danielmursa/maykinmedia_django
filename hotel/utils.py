@@ -49,7 +49,9 @@ def import_cities():
 
     try:
         credentials = get_api_credentials()
-        response = requests.get(API_URL_CITY, auth=credentials)
+        # response = requests.get(API_URL_CITY, auth=credentials)
+        # you can access at the API even without a credentials
+        response = requests.get(API_URL_CITY)
         response.raise_for_status()
         for line in response.iter_lines():
             total_cities += 1
@@ -106,7 +108,9 @@ def import_hotels():
 
     try:
         credentials = get_api_credentials()
-        response = requests.get(API_URL_HOTEL, auth=credentials)
+        #response = requests.get(API_URL_HOTEL, auth=credentials)
+        # you can access at the API even without a credentials
+        response = requests.get(API_URL_HOTEL)
         response.raise_for_status()
         for line in response.iter_lines():
             total_hotels += 1
