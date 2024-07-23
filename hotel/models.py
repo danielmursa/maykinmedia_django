@@ -33,7 +33,7 @@ class City(models.Model):
     """
     def clean(self):
         if len(self.code) != 3:
-            raise ValidationError(f"City code must be exactly 4 characters. Got {len(self.code)} characters.")
+            raise ValidationError(f"City code must be exactly 3 characters. Got {len(self.code)} characters.")
 
     def save(self, *args, **kwargs):
         self.full_clean()
