@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col mx-auto">
+        <h1 class="fw-light">Index Page</h1>
+        <p>
+          <a href="{% url 'city_list' %}" class="btn btn-primary my-2">View all cities</a>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

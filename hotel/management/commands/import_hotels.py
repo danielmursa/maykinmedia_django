@@ -1,13 +1,14 @@
 from django.core.management.base import BaseCommand
 from hotel.utils import import_hotels
 
+
 class Command(BaseCommand):
     """
     A Django management command to import hotels from an external API.
-    This command utilizes the `import_hotels` function from the utils module to fetch and import hotel data. 
+    This command utilizes the `import_hotels` function from the utils module to fetch and import hotel data.
     """
-    
-    help = 'Fetches and imports hotel data from an external API, providing success or error feedback.'
+
+    help = "Fetches and imports hotel data from an external API, providing success or error feedback."
 
     def handle(self, *args, **options):
         """

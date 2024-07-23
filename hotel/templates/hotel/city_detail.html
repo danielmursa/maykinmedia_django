@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="fw-light">{{ object }}</h1>
+<section class="container">
+  <div class="row">
+    <div class="col mx-auto">
+      <ul class="list-group">
+          {% for hotel in hotels %}
+            <li class="list-group-item"><a href="{% url 'hotel_detail' code=hotel.code %}">{{ hotel }}</a></li>
+          {% endfor %}
+        </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}

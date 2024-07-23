@@ -22,7 +22,7 @@ def get_api_credentials():
     """
     Retrieve API credentials for the 'api_user'.
     Attempts to fetch the API credentials (username and password) for the user with the username 'api_user'.
-    
+
     Returns:
         tuple: (str, str) The API credentials (username, password) or empty strings.
     """
@@ -36,7 +36,7 @@ def get_api_credentials():
 def import_cities():
     """
     Import cities from an external API and update the database.
-    Fetches city data from an API, processes each line, and updates or creates City objects in the database. 
+    Fetches city data from an API, processes each line, and updates or creates City objects in the database.
     Collects and returns import statistics.
 
     Returns:
@@ -95,7 +95,7 @@ def import_cities():
 def import_hotels():
     """
     Import hotels from an external API and update the database.
-    Fetches Hotel data from an API, processes each line, and updates or creates Hotel objects in the database. 
+    Fetches Hotel data from an API, processes each line, and updates or creates Hotel objects in the database.
     Collects and returns import statistics.
 
     Returns:
@@ -108,17 +108,19 @@ def import_hotels():
 
     try:
         credentials = get_api_credentials()
-        #response = requests.get(API_URL_HOTEL, auth=credentials)
+        # response = requests.get(API_URL_HOTEL, auth=credentials)
         # you can access at the API even without a credentials
         response = requests.get(API_URL_HOTEL)
         response.raise_for_status()
         for line in response.iter_lines():
             total_hotels += 1
             try:
-                line = clean_line(line)                
+                line = clean_line(line)
                 city = City.objects.filter(code=line[0]).first()
                 if city:
-                    hotel, created = Hotel.objects.update_or_create(city=city, code=line[1], defaults={"name": line[2]})   
+                    hotel, created = Hotel.objects.update_or_create(
+                        city=city, code=line[1], defaults={"name": line[2]}
+                    )
                     if created:
                         created_hotels += 1
                     else:
