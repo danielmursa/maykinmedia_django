@@ -33,7 +33,26 @@ def get_api_credentials():
         return ("", "")
 
 
-def import_cities():
+def make_request(url):
+    """
+    Makes a GET request to the specified URL and returns an iterator over the response lines.
+
+    Args:
+        url (str): The URL to send the GET request to.
+
+    Returns:
+    """
+    try:
+        # credentials = get_api_credentials()
+        # response = requests.get(url, auth=credentials)
+        # you can access at the API even without a credentials
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.iter_lines()
+    except requests.RequestException:
+        return ""
+
+def import_cities(lines=""):
     """
     Import cities from an external API and update the database.
     Fetches city data from an API, processes each line, and updates or creates City objects in the database.
@@ -48,12 +67,9 @@ def import_cities():
     errors = 0
 
     try:
-        credentials = get_api_credentials()
-        # response = requests.get(API_URL_CITY, auth=credentials)
-        # you can access at the API even without a credentials
-        response = requests.get(API_URL_CITY)
-        response.raise_for_status()
-        for line in response.iter_lines():
+        if not lines:
+            lines = make_request(API_URL_CITY)
+        for line in lines:
             total_cities += 1
             try:
                 line = clean_line(line)
@@ -66,10 +82,8 @@ def import_cities():
                     updated_cities += 1
             except IntegrityError as e:
                 errors += 1
-                print(f"Integrity error for line {line}: {str(e)}")
             except Exception as e:
                 errors += 1
-                print(f"Error processing line {line}: {str(e)}")
 
         stats = {
             "total_cities": total_cities,
@@ -92,7 +106,7 @@ def import_cities():
         }
 
 
-def import_hotels():
+def import_hotels(lines=""):
     """
     Import hotels from an external API and update the database.
     Fetches Hotel data from an API, processes each line, and updates or creates Hotel objects in the database.
@@ -107,12 +121,9 @@ def import_hotels():
     errors = 0
 
     try:
-        credentials = get_api_credentials()
-        # response = requests.get(API_URL_HOTEL, auth=credentials)
-        # you can access at the API even without a credentials
-        response = requests.get(API_URL_HOTEL)
-        response.raise_for_status()
-        for line in response.iter_lines():
+        if not lines:
+            lines = make_request(API_URL_HOTEL)            
+        for line in lines:
             total_hotels += 1
             try:
                 line = clean_line(line)
@@ -129,10 +140,8 @@ def import_hotels():
                     errors += 1
             except IntegrityError as e:
                 errors += 1
-                print(f"Integrity error for line {line}: {str(e)}")
             except Exception as e:
                 errors += 1
-                print(f"Error processing line {line}: {str(e)}")
 
         stats = {
             "total_hotels": total_hotels,
