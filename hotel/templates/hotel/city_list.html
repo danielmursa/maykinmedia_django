@@ -5,7 +5,7 @@
   <div class="row py-lg-5">
     <div class="col mx-auto">
       <ul class="list-group">
-          {% for city in cities %}
+          {% for city in object_list %}
             <li class="list-group-item"><a href="{% url 'city_detail' code=city.code %}">{{ city }}</a></li>
           {% endfor %}
         </ul>

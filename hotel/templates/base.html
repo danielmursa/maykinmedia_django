@@ -21,6 +21,14 @@
     <main>
       <div class="album py-5 bg-light">
         <div class="container">
+          {% if messages %}            
+                {% for message in messages %}
+                <div class="alert alert-primary" role="alert">
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                </div>
+                {% endfor %}        
+            {% endif %}
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% block content %}{% endblock %}
           </div>

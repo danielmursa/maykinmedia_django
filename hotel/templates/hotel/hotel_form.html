@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{% if object %}Update{% else %}Add{% endif %} Hotel</h1>
+<!--
+here it is also possible to modify the css base of the form by extending the template, but I did not feel it was the right case to do now  
+-->
+  <form method="post" class="form-group">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+{% endblock %}

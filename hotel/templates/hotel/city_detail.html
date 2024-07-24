@@ -2,15 +2,16 @@
 
 {% block content %}
 <h1 class="fw-light">{{ object }}</h1>
-<section class="container">
-  <div class="row">
-    <div class="col mx-auto">
-      <ul class="list-group">
-          {% for hotel in hotels %}
-            <li class="list-group-item"><a href="{% url 'hotel_detail' code=hotel.code %}">{{ hotel }}</a></li>
-          {% endfor %}
-        </ul>
-    </div>
-  </div>
-</section>
+<ul class="list-group" style="width: 100%;">
+  {% for hotel in object.hotels.all %}
+  <li class="list-group-item">
+    <a href="{% url 'hotel_update' code=hotel.code %}" class="btn btn-sm btn-success">Update</a>
+    <a href="{% url 'hotel_delete' code=hotel.code %}" class="btn btn-sm btn-danger">Delete</a>
+    - 
+    <a href="{% url 'hotel_detail' code=hotel.code %}">{{ hotel }}</a> 
+  </li>
+  {% endfor %}
+</ul>
+<a href="{% url 'city_hotel_create' city_code=object.code %}" class="btn btn-primary">Add Hotel</a>
+
 {% endblock %}
