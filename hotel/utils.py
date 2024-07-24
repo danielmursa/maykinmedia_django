@@ -52,6 +52,7 @@ def make_request(url):
     except requests.RequestException:
         return ""
 
+
 def import_cities(lines=""):
     """
     Import cities from an external API and update the database.
@@ -122,7 +123,7 @@ def import_hotels(lines=""):
 
     try:
         if not lines:
-            lines = make_request(API_URL_HOTEL)            
+            lines = make_request(API_URL_HOTEL)
         for line in lines:
             total_hotels += 1
             try:

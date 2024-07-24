@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
 class City(models.Model):
 
     code = models.CharField(
@@ -31,14 +32,17 @@ class City(models.Model):
         help_text="Enter the name of the country where the city is located."
     )
     """
+
     def clean(self):
         if len(self.code) != 3:
-            raise ValidationError(f"City code must be exactly 3 characters. Got {len(self.code)} characters.")
+            raise ValidationError(
+                f"City code must be exactly 3 characters. Got {len(self.code)} characters."
+            )
 
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
-    
+
     def __str__(self):
         return f"{self.code} - {self.name}"
 
@@ -70,12 +74,14 @@ class Hotel(models.Model):
 
     def clean(self):
         if len(self.code) != 5:
-            raise ValidationError(f"Hotel code must be exactly 5 characters. Got {len(self.code)} characters.")
+            raise ValidationError(
+                f"Hotel code must be exactly 5 characters. Got {len(self.code)} characters."
+            )
 
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
-    
+
     # Optional fields to store additional information about the hotel
     """
     description = models.TextField(
