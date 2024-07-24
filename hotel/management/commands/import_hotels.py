@@ -1,6 +1,8 @@
+import logging
 from django.core.management.base import BaseCommand
 from hotel.utils import import_hotels
 
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
@@ -24,8 +26,10 @@ class Command(BaseCommand):
         Returns:
             None
         """
+        logger.debug("Start import_hotels")
         success, result = import_hotels()
         if success:
             self.stdout.write(self.style.SUCCESS(f"Import successful: {result}"))
         else:
             self.stderr.write(self.style.ERROR(f"Import error: {result}"))
+        logger.debug("Start import_hotels")

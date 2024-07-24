@@ -1,9 +1,11 @@
+import logging
 import requests
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 from .models import City, Hotel
 from .settings import *
 
+logger = logging.getLogger(__name__)
 
 def clean_line(line):
     """
@@ -46,10 +48,12 @@ def make_request(url):
         # credentials = get_api_credentials()
         # response = requests.get(url, auth=credentials)
         # you can access at the API even without a credentials
+        logger.debug(f"Make request for {url}")
         response = requests.get(url)
         response.raise_for_status()
         return response.iter_lines()
-    except requests.RequestException:
+    except requests.RequestException as e:
+        logger.error(f"Error during request for {url}, {e}")
         return ""
 
 
@@ -78,8 +82,10 @@ def import_cities(lines=""):
                     code=line[0], defaults={"name": line[1]}
                 )
                 if created:
+                    logger.debug(f"Create new city {city}")
                     created_cities += 1
                 else:
+                    logger.debug(f"Update city {city}")
                     updated_cities += 1
             except IntegrityError as e:
                 errors += 1
@@ -96,11 +102,13 @@ def import_cities(lines=""):
         return True, stats
 
     except requests.RequestException as e:
+        logger.error(f"Error {e}")
         return False, {
             "error_code": 2,
             "message": f"Errore durante la richiesta API: {str(e)}",
         }
     except Exception as e:
+        logger.error(f"Error {e}")
         return False, {
             "error_code": 3,
             "message": f"Errore durante l'importazione: {str(e)}",
@@ -134,8 +142,10 @@ def import_hotels(lines=""):
                         city=city, code=line[1], defaults={"name": line[2]}
                     )
                     if created:
+                        logger.debug(f"Create new hotel {hotel}")
                         created_hotels += 1
                     else:
+                        logger.debug(f"Update hotel {hotel}")
                         updated_hotels += 1
                 else:
                     errors += 1
@@ -154,11 +164,13 @@ def import_hotels(lines=""):
         return True, stats
 
     except requests.RequestException as e:
+        logger.error(f"Error {e}")
         return False, {
             "error_code": 2,
             "message": f"Errore durante la richiesta API: {str(e)}",
         }
     except Exception as e:
+        logger.error(f"Error {e}")
         return False, {
             "error_code": 3,
             "message": f"Errore durante l'importazione: {str(e)}",

@@ -1,6 +1,8 @@
+import logging
 from django.core.management.base import BaseCommand
 from hotel.utils import import_cities
 
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     """
@@ -24,8 +26,10 @@ class Command(BaseCommand):
         Returns:
             None
         """
+        logger.debug("Start import_cities")
         success, result = import_cities()
         if success:
             self.stdout.write(self.style.SUCCESS(f"Import successful: {result}"))
         else:
             self.stderr.write(self.style.ERROR(f"Import error: {result}"))
+        logger.debug(f"End import_cities {result}")
