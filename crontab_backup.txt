@@ -1,0 +1,7 @@
+# other scripts
+
+# Import cities every day at 2:00 AM
+0 2 * * * /usr/local/bin/python manage.py import_cities >> import_cities.log 2>&1
+
+# Import hotels every day at 2:30 AM
+30 2 * * * /usr/local/bin/python manage.py import_hotels >> import_hotels.log 2>&1
