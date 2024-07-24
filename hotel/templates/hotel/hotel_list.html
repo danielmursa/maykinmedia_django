@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Hotel List</h1>
+<input class="form-control form-control-lg" type="text" id="city-search" list="city-list" placeholder="Start typing a city code...">
+<datalist id="city-list"></datalist>
+<ul class="list-group" id="hotel-list"></ul>
+
+<script>
+    let hotelsCache = [];
+
+    async function fetchCities() {
+        try {
+            let response = await fetch(`{% url 'city-list' %}`);
+            if (response.ok) {
+                let data = await response.json();
+                populateCityList(data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function populateCityList(cities) {
+        const cityList = document.getElementById('city-list');
+        cityList.innerHTML = '';
+        cities.forEach(city => {
+            let option = document.createElement('option');
+            option.value = city.code;
+            option.textContent = city.code;
+            cityList.appendChild(option);
+        });
+    }
+
+    async function fetchHotels(cityCode) {
+        try {
+            let response = await fetch(`{% url 'hotel-list' %}`);
+            if (response.ok) {
+                let data = await response.json();
+                hotelsCache = data;
+                displayHotelData(data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    function displayHotelData(hotels) {
+        const hotelList = document.getElementById('hotel-list');
+        hotelList.innerHTML = '';
+        if(hotels.length > 1){
+            hotels.forEach(hotel => {
+                let li = document.createElement('li');
+                li.className = "list-group-item";
+                li.textContent = `${hotel.city} - ${hotel.name} (${hotel.code})`;
+                hotelList.appendChild(li);
+            });
+        }
+        else{
+            let li = document.createElement('li');
+            li.className = "list-group-item";
+            li.textContent = `0 Hotels Found`;
+            hotelList.appendChild(li);
+        }
+    }
+
+    function filterHotels(query) {
+
+        const filteredHotels = hotelsCache.filter(hotel => 
+            hotel.city.toLowerCase().includes(query.toLowerCase())
+        );
+        displayHotelData(filteredHotels);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchCities();
+        fetchHotels();
+    });
+
+    document.getElementById('city-search').addEventListener('input', function() {
+        const query = this.value;
+        filterHotels(query);
+    });
+</script>
+
+
+{% endblock %}
