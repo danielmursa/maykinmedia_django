@@ -1,36 +1,26 @@
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from .models import City, Hotel
+from .forms import HotelForm
 
 
 class CityListView(ListView):
     model = City
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["cities"] = City.objects.all()
-        return context
-
-
 class CityHotelDetailView(DetailView):
     model = City
     template_name = "hotel/city_detail.html"
-
-    def get_object(self, queryset=None):
-        code = self.kwargs.get("code")
-        return get_object_or_404(City, code=code)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["hotels"] = self.get_object().hotels.all()
-        return context
-
+    pk_url_kwarg = "code"
 
 class HotelDetailView(DetailView):
     model = Hotel
     template_name = "hotel/hotel_detail.html"
-
-    def get_object(self, queryset=None):
-        code = self.kwargs.get("code")
-        return get_object_or_404(Hotel, code=code)
+    pk_url_kwarg = "code"
