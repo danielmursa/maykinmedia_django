@@ -4,7 +4,16 @@ from .utils import import_cities, import_hotels
 
 
 class ImportCitiesTestCase(TestCase):
+    """
+    Tests for the `import_cities` function.
+    """
+
     def test_city_success(self):
+        """
+        Test importing new cities with unique codes.
+
+        Verifies that new cities are created and no errors occur.
+        """
         lines = [b"MIL;Milano", b"BOL;Bologna"]
 
         success, stats = import_cities(lines)
@@ -19,6 +28,11 @@ class ImportCitiesTestCase(TestCase):
         self.assertTrue(City.objects.filter(code="MIL").exists())
 
     def test_city_duplicate(self):
+        """
+        Test importing a city with an existing code.
+
+        Ensures that the existing city is updated and no new cities are created.
+        """
         City.objects.create(code="BOL", name="Bologna")
 
         lines = [b"BOL; Bologna"]
@@ -34,7 +48,11 @@ class ImportCitiesTestCase(TestCase):
         self.assertTrue(City.objects.filter(code="BOL").exists())
 
     def test_city_error(self):
-        # City code wrong
+        """
+        Test importing cities with incorrect codes.
+
+        Verifies that errors are handled and no invalid cities are created.
+        """
         lines = [b"BOLOGNA; Bologna"]
 
         success, stats = import_cities(lines)
@@ -50,7 +68,16 @@ class ImportCitiesTestCase(TestCase):
 
 
 class ImportHotelsTestCase(TestCase):
+    """
+    Tests for the `import_hotels` function.
+    """
+
     def test_hotel_success(self):
+        """
+        Test importing hotels after cities are created.
+
+        Verifies that hotels are created successfully when cities exist.
+        """
         lines = [b"MIL;Milano", b"BOL;Bologna"]
 
         success, stats = import_cities(lines)
@@ -77,6 +104,12 @@ class ImportHotelsTestCase(TestCase):
         self.assertTrue(Hotel.objects.filter(code="BOL02").exists())
 
     def test_city_hotel_related_success(self):
+        """
+        Test that hotels are related to the correct city.
+
+        Verifies that hotels are linked to their respective cities and the
+        relationships are correctly set.
+        """
         lines = [b"MIL;Milano", b"BOL;Bologna"]
         success, stats = import_cities(lines)
 
@@ -97,7 +130,11 @@ class ImportHotelsTestCase(TestCase):
         self.assertEqual(Hotel.objects.all().count(), 4)
 
     def test_hotel_error(self):
-        # City not found
+        """
+        Test importing hotels with non-existent city codes.
+
+        Ensures that hotels are not created if their related city does not exist.
+        """
         lines = [
             b"MIL;Milano",
         ]
