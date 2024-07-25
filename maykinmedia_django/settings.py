@@ -11,11 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-w=340^4t#1(3al*57*^cg_0t(b^jcv9ly+i7mc)l6%c83q-!ky"
 
-
-def location(x):
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)), x)
-
-
 LOCAL_ENV = "local"
 PROD_ENV = "prod"
 ENVIRONMENT = os.getenv("DJANGO_ENV", "local")

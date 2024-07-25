@@ -4,6 +4,7 @@ from hotel.utils import import_cities
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     """
     A Django management command to import cities from an external API.

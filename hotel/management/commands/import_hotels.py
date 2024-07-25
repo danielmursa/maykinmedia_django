@@ -4,6 +4,7 @@ from hotel.utils import import_hotels
 
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     """
     A Django management command to import hotels from an external API.

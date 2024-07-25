@@ -7,6 +7,7 @@ from .settings import *
 
 logger = logging.getLogger(__name__)
 
+
 def clean_line(line):
     """
     Clean and parse a line of data. Decodes a byte string, removes any double quotes, and splits the line by semicolons into a list of strings.
