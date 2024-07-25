@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: maykinmedia_django_db_name
+      POSTGRES_USER: maykinmedia_django_db_user
+      POSTGRES_PASSWORD: TestDJANGO123
+
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8000 --workers 3 --threads 2 --timeout 120 maykinmedia_django.wsgi:application
+    volumes:
+      - .:/app      
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_ENV=prod
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_NAME=maykinmedia_django_db_name
+      - DJANGO_DB_USER=maykinmedia_django_db_user
+      - DJANGO_DB_PASSWORD=TestDJANGO123
+      
+volumes:
+  postgres_data:
