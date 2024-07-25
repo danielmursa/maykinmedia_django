@@ -2,3 +2,5 @@ db.sqlite3
 __pycache__/
 maykinmedia_django/settings_local.py
 maykinmedia_logger.log
+static/
+staticfiles/

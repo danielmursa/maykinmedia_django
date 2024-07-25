@@ -4,3 +4,4 @@ djangorestframework
 requests
 gunicorn
 psycopg2-binary
+whitenoise
