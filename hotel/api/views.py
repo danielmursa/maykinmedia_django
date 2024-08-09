@@ -1,6 +1,7 @@
 # api/views.py
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from ..models import City, Hotel
@@ -8,6 +9,7 @@ from .serializers import CitySerializer, HotelSerializer
 
 
 class CityList(generics.ListAPIView):
+    permission_classes = [AllowAny]
     queryset = City.objects.all()
     serializer_class = CitySerializer
 
@@ -27,6 +29,7 @@ class CityDetail(generics.GenericAPIView):
 
 
 class HotelList(generics.ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     filter_backends = [DjangoFilterBackend]
