@@ -1,24 +1,13 @@
+import csv
 import logging
 import requests
+from io import StringIO
 from django.db import IntegrityError
 from django.contrib.auth.models import User
 from .models import City, Hotel
 from .settings import *
 
 logger = logging.getLogger(__name__)
-
-
-def clean_line(line):
-    """
-    Clean and parse a line of data. Decodes a byte string, removes any double quotes, and splits the line by semicolons into a list of strings.
-
-    Args:
-        line (bytes): A line of data in bytes.
-
-    Returns:
-        list: A list of strings obtained by splitting the cleaned line.
-    """
-    return line.decode().replace('"', "").split(";")
 
 
 def get_api_credentials():
@@ -52,10 +41,12 @@ def make_request(url):
         logger.debug(f"Make request for {url}")
         response = requests.get(url)
         response.raise_for_status()
-        return response.iter_lines()
+        csv_file = StringIO(response.text)
+        csv_reader = csv.reader(csv_file, delimiter=";")
+        return [row for row in csv_reader]
     except requests.RequestException as e:
         logger.error(f"Error during request for {url}, {e}")
-        return ""
+        return []
 
 
 def import_cities(lines=""):
@@ -78,7 +69,6 @@ def import_cities(lines=""):
         for line in lines:
             total_cities += 1
             try:
-                line = clean_line(line)
                 city, created = City.objects.update_or_create(
                     code=line[0], defaults={"name": line[1]}
                 )
@@ -136,7 +126,6 @@ def import_hotels(lines=""):
         for line in lines:
             total_hotels += 1
             try:
-                line = clean_line(line)
                 city = City.objects.filter(code=line[0]).first()
                 if city:
                     hotel, created = Hotel.objects.update_or_create(

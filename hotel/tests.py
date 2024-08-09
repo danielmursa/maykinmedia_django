@@ -14,7 +14,7 @@ class ImportCitiesTestCase(TestCase):
 
         Verifies that new cities are created and no errors occur.
         """
-        lines = [b"MIL;Milano", b"BOL;Bologna"]
+        lines = [["MIL", "Milano"], ["BOL", "Bologna"]]
 
         success, stats = import_cities(lines)
 
@@ -35,7 +35,7 @@ class ImportCitiesTestCase(TestCase):
         """
         City.objects.create(code="BOL", name="Bologna")
 
-        lines = [b"BOL; Bologna"]
+        lines = [["BOL", "Bologna"]]
 
         success, stats = import_cities(lines)
 
@@ -53,7 +53,7 @@ class ImportCitiesTestCase(TestCase):
 
         Verifies that errors are handled and no invalid cities are created.
         """
-        lines = [b"BOLOGNA; Bologna"]
+        lines = [["BOLOGNA", "Bologna"]]
 
         success, stats = import_cities(lines)
 
@@ -78,17 +78,17 @@ class ImportHotelsTestCase(TestCase):
 
         Verifies that hotels are created successfully when cities exist.
         """
-        lines = [b"MIL;Milano", b"BOL;Bologna"]
+        lines = [["MIL", "Milano"], ["BOL", "Bologna"]]
 
         success, stats = import_cities(lines)
         self.assertTrue(City.objects.filter(code="BOL").exists())
         self.assertTrue(City.objects.filter(code="MIL").exists())
 
         lines = [
-            b"MIL;MIL01;Milano 1",
-            b"MIL;MIL02;Milano 2",
-            b"BOL;BOL01;Bologna 1",
-            b"BOL;BOL02;Bologna 2",
+            ["MIL", "MIL01", "Milano 1"],
+            ["MIL", "MIL02", "Milano 2"],
+            ["BOL", "BOL01", "Bologna 1"],
+            ["BOL", "BOL02", "Bologna 2"],
         ]
 
         success, stats = import_hotels(lines)
@@ -110,14 +110,14 @@ class ImportHotelsTestCase(TestCase):
         Verifies that hotels are linked to their respective cities and the
         relationships are correctly set.
         """
-        lines = [b"MIL;Milano", b"BOL;Bologna"]
+        lines = [["MIL", "Milano"], ["BOL", "Bologna"]]
         success, stats = import_cities(lines)
-
+        
         lines = [
-            b"MIL;MIL01;Milano 1",
-            b"MIL;MIL02;Milano 2",
-            b"BOL;BOL01;Bologna 1",
-            b"BOL;BOL02;Bologna 2",
+            ["MIL", "MIL01", "Milano 1"],
+            ["MIL", "MIL02", "Milano 2"],
+            ["BOL", "BOL01", "Bologna 1"],
+            ["BOL", "BOL02", "Bologna 2"],
         ]
         success, stats = import_hotels(lines)
 
@@ -135,14 +135,12 @@ class ImportHotelsTestCase(TestCase):
 
         Ensures that hotels are not created if their related city does not exist.
         """
-        lines = [
-            b"MIL;Milano",
-        ]
+        lines = [["MIL", "MILANO"]]
 
         success, stats = import_cities(lines)
         lines = [
-            b"BOL;BOL01;Bologna 1",
-            b"BOL;BOL02;Bologna 2",
+            ["BOL", "BOL01", "Bologna 1"],
+            ["BOL", "BOL02", "Bologna 2"],
         ]
         success, stats = import_hotels(lines)
         self.assertTrue(success)
